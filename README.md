@@ -8,10 +8,9 @@
 
 **Run multiple Antigravity IDE profiles at the same time — each with its own accounts, settings, and extensions.**
 
-> Note: Multigravity supports macOS and Windows and Linux.
-
-
 No more logging in and out. Just switch profiles instantly or use them all at once!
+
+> Note: Suported OS: macOS, Windows and Linux.
 
 ---
 
