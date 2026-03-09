@@ -106,4 +106,5 @@ Every profile automatically gets a **clickable app** in `~/Applications` (macOS)
 
 ## Credits
 
-- Windows Support Added By Samin Yeasar - [Follow on X](https://x.com/Solez_None)
+- Windows support was added by **Samin Yeasar**.  
+  X: [@Solez_None](https://x.com/Solez_None)

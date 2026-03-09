@@ -4,13 +4,13 @@ Run multiple Antigravity IDE profiles at the same time.
 #>
 
 param (
-    [Parameter(Position=0, Mandatory=$false)]
+    [Parameter(Position = 0, Mandatory = $false)]
     [string]$cmd,
     
-    [Parameter(Position=1, Mandatory=$false)]
+    [Parameter(Position = 1, Mandatory = $false)]
     [string]$arg1,
 
-    [Parameter(Position=2, Mandatory=$false)]
+    [Parameter(Position = 2, Mandatory = $false)]
     [string]$arg2
 )
 
@@ -49,7 +49,8 @@ function Write-Usage {
     Write-Host "Profile names: alphanumeric and hyphens only (e.g. work, personal, test-1)"
 }
 
-function Validate-Name ($name) {
+function Validate-Name {
+    param($name)
     if ([string]::IsNullOrWhiteSpace($name)) {
         Write-Error "Error: profile name required"
         exit 1
@@ -60,7 +61,8 @@ function Validate-Name ($name) {
     }
 }
 
-function Invoke-CreateProfile ($PROFILE) {
+function Invoke-CreateProfile {
+    param($PROFILE)
     $PROFILE_DIR = "$BASE\$PROFILE"
     
     New-Item -ItemType Directory -Force -Path "$PROFILE_DIR\.antigravity\extensions" | Out-Null
@@ -68,7 +70,8 @@ function Invoke-CreateProfile ($PROFILE) {
     New-Item -ItemType Directory -Force -Path "$PROFILE_DIR\AppData\Local" | Out-Null
 }
 
-function Invoke-LaunchProfile ($PROFILE) {
+function Invoke-LaunchProfile {
+    param($PROFILE)
     $PROFILE_DIR = "$BASE\$PROFILE"
 
     if (!(Test-Path $PROFILE_DIR)) {
@@ -99,17 +102,21 @@ function Invoke-ListProfiles {
             foreach ($p in $profiles) {
                 Write-Host $p.Name
             }
-        } elseif ($profiles -is [System.IO.DirectoryInfo]) {
+        }
+        elseif ($profiles -is [System.IO.DirectoryInfo]) {
             Write-Host $profiles.Name
-        } else {
+        }
+        else {
             Write-Host "(none)"
         }
-    } else {
+    }
+    else {
         Write-Host "(none)"
     }
 }
 
-function Invoke-CreateShortcut ($PROFILE) {
+function Invoke-CreateShortcut {
+    param($PROFILE)
     $APP_NAME = "Multigravity $PROFILE"
     $SHORTCUT_PATH = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\$APP_NAME.lnk"
     
@@ -132,7 +139,8 @@ function Invoke-CreateShortcut ($PROFILE) {
     Write-Host "Shortcut created: $SHORTCUT_PATH"
 }
 
-function Invoke-NewProfile ($PROFILE) {
+function Invoke-NewProfile {
+    param($PROFILE)
     Validate-Name $PROFILE
 
     $PROFILE_DIR = "$BASE\$PROFILE"
@@ -147,7 +155,8 @@ function Invoke-NewProfile ($PROFILE) {
     Invoke-CreateShortcut $PROFILE
 }
 
-function Invoke-DeleteProfile ($PROFILE) {
+function Invoke-DeleteProfile {
+    param($PROFILE)
     Validate-Name $PROFILE
 
     $PROFILE_DIR = "$BASE\$PROFILE"
@@ -166,12 +175,14 @@ function Invoke-DeleteProfile ($PROFILE) {
             Write-Host "Removed shortcut: $SHORTCUT_PATH"
         }
         Write-Host "Deleted profile '$PROFILE'"
-    } else {
+    }
+    else {
         Write-Host "Aborted."
     }
 }
 
-function Invoke-RenameProfile ($OLD, $NEW) {
+function Invoke-RenameProfile {
+    param($OLD, $NEW)
     Validate-Name $OLD
     Validate-Name $NEW
 

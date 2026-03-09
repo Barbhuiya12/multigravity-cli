@@ -5,7 +5,7 @@ $BRANCH = "main"
 $RAW = "https://raw.githubusercontent.com/$REPO/$BRANCH"
 $INSTALL_DIR = "$env:USERPROFILE\.local\bin"
 
-function Print-Step ($message) {
+function Write-Step ($message) {
     Write-Host "  -> $message"
 }
 
@@ -34,10 +34,10 @@ if (!$IN_PATH) {
     Write-Host ""
 }
 
-Print-Step "Downloading multigravity.ps1..."
+Write-Step "Downloading multigravity.ps1..."
 Invoke-WebRequest -Uri "$RAW/multigravity.ps1" -OutFile "$INSTALL_DIR\multigravity.ps1"
 
-Print-Step "Creating wrapper script..."
+Write-Step "Creating wrapper script..."
 $wrapper = @"
 @echo off
 powershell.exe -ExecutionPolicy Bypass -File "%~dp0\multigravity.ps1" %*
