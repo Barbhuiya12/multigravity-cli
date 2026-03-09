@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 REPO="sujitagarwal/multigravity-cli"
 BRANCH="main"
@@ -9,6 +9,19 @@ INSTALL_DIR="/usr/local/bin"
 # ── helpers ──────────────────────────────────────────────────────────────────
 print_step () { echo "  → $1"; }
 abort ()       { echo "Error: $1" >&2; exit 1; }
+
+# ── platform ─────────────────────────────────────────────────────────────────
+case "$(uname -s)" in
+  Darwin)
+    PLATFORM="darwin"
+    ;;
+  Linux)
+    PLATFORM="linux"
+    ;;
+  *)
+    abort "unsupported platform. Multigravity currently supports macOS and Linux."
+    ;;
+esac
 
 # ── preflight ────────────────────────────────────────────────────────────────
 command -v curl &>/dev/null || abort "curl is required but not found"
@@ -33,9 +46,11 @@ print_step "Downloading multigravity..."
 curl -fsSL "$RAW/multigravity" -o "$INSTALL_DIR/multigravity"
 chmod +x "$INSTALL_DIR/multigravity"
 
-# ── download icon ─────────────────────────────────────────────────────────────
-print_step "Downloading icon..."
-curl -fsSL "$RAW/icon.icns" -o "$INSTALL_DIR/icon.icns"
+# ── download macOS icon ──────────────────────────────────────────────────────
+if [ "$PLATFORM" = "darwin" ]; then
+  print_step "Downloading icon..."
+  curl -fsSL "$RAW/icon.icns" -o "$INSTALL_DIR/icon.icns"
+fi
 
 echo ""
 echo "✓ Multigravity installed successfully!"
@@ -44,3 +59,11 @@ echo "Usage:"
 echo "  multigravity help"
 echo "  multigravity new <profile-name>"
 echo "  multigravity <profile-name>"
+
+if [ "$PLATFORM" = "linux" ] && ! command -v antigravity &>/dev/null && [ ! -x /usr/share/antigravity/antigravity ]; then
+  echo ""
+  echo "Note:"
+  echo "  Antigravity was not found on this machine."
+  echo "  Install Antigravity for Linux and ensure 'antigravity' is on PATH,"
+  echo "  or launch Multigravity with MULTIGRAVITY_APP=/path/to/antigravity."
+fi

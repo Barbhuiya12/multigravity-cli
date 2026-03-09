@@ -8,7 +8,8 @@
 
 **Run multiple Antigravity IDE profiles at the same time — each with its own accounts, settings, and extensions.**
 
-> Note: Multigravity supports macOS and Windows.
+> Note: Multigravity supports macOS and Windows and Linux.
+
 
 No more logging in and out. Just switch profiles instantly or use them all at once!
 
@@ -19,6 +20,7 @@ No more logging in and out. Just switch profiles instantly or use them all at on
 ### macOS
 
 Open the **Terminal** app on your Mac and paste this:
+Open Terminal and paste this:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/sujitagarwal/multigravity-cli/main/install.sh)"
@@ -34,6 +36,8 @@ irm https://raw.githubusercontent.com/sujitagarwal/multigravity-cli/main/install
 
 That's it. Multigravity is now installed.
 
+> Linux note: Antigravity must already be installed. If it is not on your `PATH`, launch Multigravity with `MULTIGRAVITY_APP=/path/to/antigravity`.
+
 ---
 
 ## Getting Started
@@ -47,7 +51,10 @@ multigravity new work
 multigravity new personal
 ```
 
-This also creates a clickable app shortcut in your `~/Applications` folder.
+This also creates a clickable launcher:
+
+- macOS: `~/Applications/Multigravity <name>.app`
+- Linux: `~/.local/share/applications/multigravity-<name>.desktop`
 
 ### 2. Open a profile
 
@@ -55,7 +62,15 @@ This also creates a clickable app shortcut in your `~/Applications` folder.
 multigravity work
 ```
 
-Antigravity will open using that profile's isolated settings and accounts.
+Antigravity will open using that profile's isolated settings, accounts, and extensions.
+
+You can also pass normal Antigravity arguments through:
+
+```bash
+multigravity work --new-window
+multigravity work .
+multigravity work path/to/file.py
+```
 
 ### 3. See all your profiles
 
@@ -108,3 +123,7 @@ Every profile automatically gets a **clickable app** in `~/Applications` (macOS)
 
 - Windows support was added by **Samin Yeasar**.  
   X: [@Solez_None](https://x.com/Solez_None)
+Every profile automatically gets a clickable launcher so you can open profiles directly without using the terminal:
+
+- macOS: app bundle in `~/Applications`
+- Linux: desktop entry in `~/.local/share/applications`
