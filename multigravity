@@ -479,6 +479,27 @@ rename_profile() {
   print_info "Renamed profile '$old' to '$new'"
 }
 
+update_cli() {
+  local script_url="https://raw.githubusercontent.com/sujitagarwal/multigravity-cli/main/multigravity"
+  local target
+  target="$(script_path)"
+
+  if [ -z "$target" ]; then
+    abort "could not determine script path for update"
+  fi
+
+  print_info "Updating multigravity from $script_url ..."
+  if curl -fsSL "$script_url" -o "$target.tmp"; then
+    mv "$target.tmp" "$target"
+    chmod +x "$target"
+    print_info "Successfully updated multigravity!"
+  else
+    rm -f "$target.tmp"
+    abort "failed to download update"
+  fi
+}
+
+
 usage() {
   cat <<EOF
 Usage: multigravity <command> [args]
@@ -488,6 +509,7 @@ Commands:
   list                  List existing profiles
   rename <old> <new>    Rename a profile (updates its shortcut)
   delete <name>         Delete a profile and its data
+  update                Update multigravity to the latest version
   <name> [args...]      Launch Antigravity with the given profile
   help                  Show this help
 
@@ -511,6 +533,9 @@ case "$cmd" in
     ;;
   delete)
     delete_profile "${2-}"
+    ;;
+  update)
+    update_cli
     ;;
   help | --help | -h)
     usage
