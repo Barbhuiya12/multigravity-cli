@@ -286,18 +286,18 @@ function Invoke-DoctorCli {
 
     # 1. Antigravity Installation
     if ($APP -and (Test-Path $APP)) {
-        Write-Host "  [✓] Antigravity: Found at $APP"
+        Write-Host "  [OK] Antigravity: Found at $APP"
     } else {
-        Write-Host "  [✗] Antigravity: Not found. Ensure it is installed or set MULTIGRAVITY_APP."
+        Write-Host "  [ERR] Antigravity: Not found. Ensure it is installed or set MULTIGRAVITY_APP."
         $errors++
     }
 
     # 2. Path Check
     $cmdObj = Get-Command multigravity -ErrorAction SilentlyContinue
     if ($cmdObj) {
-        Write-Host "  [✓] Global Binary: $($cmdObj.Source)"
+        Write-Host "  [OK] Global Binary: $($cmdObj.Source)"
     } else {
-        Write-Host "  [!] Global Binary: Not found in PATH. Run install script or update PATH."
+        Write-Host "  [WARN] Global Binary: Not found in PATH. Run install script or update PATH."
         $warnings++
     }
 
@@ -308,9 +308,9 @@ function Invoke-DoctorCli {
             $testFile = Join-Path $BASE ".write-test"
             New-Item -ItemType File -Path $testFile -Force -ErrorAction Stop | Out-Null
             Remove-Item $testFile -Force
-            Write-Host "  [✓] Profile storage: $BASE (writable)"
+            Write-Host "  [OK] Profile storage: $BASE (writable)"
         } catch {
-            Write-Host "  [✗] Profile storage: $BASE (NOT writable)"
+            Write-Host "  [ERR] Profile storage: $BASE (NOT writable)"
             $errors++
         }
     } else {
@@ -320,12 +320,12 @@ function Invoke-DoctorCli {
     Write-Host ""
     if ($errors -eq 0) {
         if ($warnings -eq 0) {
-            Write-Host "✓ Your environment looks perfect!"
+            Write-Host "OK: Your environment looks perfect!"
         } else {
-            Write-Host "Found $warnings warning(s). Multigravity should still work, but some features might be degraded."
+            Write-Host "WARN: Found $warnings warning(s). Multigravity should still work, but some features might be degraded."
         }
     } else {
-        Write-Host "✗ Found $errors error(s) and $warnings warning(s). Please fix the errors above."
+        Write-Host "ERR: Found $errors error(s) and $warnings warning(s). Please fix the errors above."
     }
 }
 
