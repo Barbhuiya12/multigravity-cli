@@ -580,6 +580,42 @@ doctor_cli() {
   fi
 }
 
+profile_stats() {
+  if [ ! -d "$BASE" ]; then
+    print_info "No profiles found."
+    return 0
+  fi
+
+  print_info "Profile Storage Usage:"
+  printf "%-20s %-10s %-10s\n" "PROFILE" "SIZE" "EXTENSIONS"
+  printf "%-20s %-10s %-10s\n" "-------" "----" "----------"
+
+  local dir
+  for dir in "$BASE"/*; do
+    [ -d "$dir" ] || continue
+    local name
+    name=$(basename "$dir")
+    
+    local size
+    if [ "$(uname -s)" = "Darwin" ]; then
+      size=$(du -sh "$dir" | cut -f1)
+    else
+      size=$(du -sh "$dir" | cut -f1)
+    fi
+
+    local ext_count
+    ext_count=$(ls -1 "$(extensions_dir "$dir")" 2>/dev/null | wc -l | xargs)
+    [ -z "$ext_count" ] && ext_count=0
+
+    printf "%-20s %-10s %-10s\n" "$name" "$size" "$ext_count"
+  done
+
+  echo ""
+  local total
+  total=$(du -sh "$BASE" | cut -f1)
+  print_info "Total usage: $total"
+}
+
 update_cli() {
   local script_url="https://raw.githubusercontent.com/sujitagarwal/multigravity-cli/main/multigravity"
   local target
@@ -639,6 +675,7 @@ _multigravity() {
         'clone:Clone an existing profile'
         'update:Update multigravity'
         'doctor:Run system diagnosis'
+        'stats:Show profile storage usage'
         'completion:Setup shell completion'
         'help:Show help'
     )
@@ -672,7 +709,8 @@ _multigravity_completions() {
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="new list rename delete clone update doctor completion help"
+    opts="new list rename delete clone update doctor stats completion help"
+ pocket
 
     if [[ ${COMP_CWORD} -eq 1 ]] ; then
         local profiles=$(multigravity list --raw 2>/dev/null)
@@ -708,6 +746,7 @@ Commands:
   clone <src> <dest>    Clone an existing profile
   update                Update multigravity to the latest version
   doctor                Run a system diagnosis
+  stats                 Show storage usage per profile
   completion            Show setup instructions for shell completion
   <name> [args...]      Launch Antigravity with the given profile
   help                  Show this help
@@ -741,6 +780,9 @@ case "$cmd" in
     ;;
   doctor)
     doctor_cli
+    ;;
+  stats)
+    profile_stats
     ;;
   completion)
     if [ -n "${2-}" ]; then

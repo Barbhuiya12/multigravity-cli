@@ -104,6 +104,14 @@ Check if your environment is set up correctly:
 multigravity doctor
 ```
 
+### Storage Stats
+
+See how much space your profiles are taking up:
+
+```bash
+multigravity stats
+```
+
 ---
 
 ## Other Commands
